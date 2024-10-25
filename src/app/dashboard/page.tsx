@@ -8,11 +8,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <main className="flex flex-col justify-center text-center h-full max-w-5xl max-auto my-8">
-      <h2 className="text-5xl">Dashboard</h2>
+      <div className="flex justify-between mb-5">
+        <h2 className="text-3xl">Invoicing</h2>
+        <Button asChild>
+          <Link href="invoices/new">Create</Link>
+        </Button>
+      </div>
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
