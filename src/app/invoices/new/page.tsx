@@ -1,3 +1,4 @@
+import { createInvoice } from "@/action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,14 +7,12 @@ import { db } from "@/db";
 import { sql } from "drizzle-orm";
 
 export default async function InvoicePageNew() {
-  const results = await db.execute(sql`SELECT current_database()`);
   return (
     <main className="flex flex-col justify-center h-full max-w-5xl max-auto my-8">
       <div className="flex justify-between mb-5">
         <h2 className="text-3xl">Create New Invoice</h2>
-        {JSON.stringify(results)}
       </div>
-      <form className="grid gap-2 max-w-sm">
+      <form action={createInvoice} className="grid gap-2 max-w-sm">
         <div>
           <Label htmlFor="name" className="block font-semibold mb-2 text-sm">
             Billing Name
