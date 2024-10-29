@@ -7,10 +7,9 @@ import { eq } from "drizzle-orm";
 export default async function InvoiceDetailPage({
   params,
 }: {
-  params: { invoiceId: string };
+  params: Promise<{ invoiceId: string }>;
 }) {
-  await params;
-  const invoiceId = parseInt(params.invoiceId);
+  const invoiceId = parseInt((await params).invoiceId);
   const [invoice] = await db
     .select()
     .from(Invoices)
@@ -20,9 +19,7 @@ export default async function InvoiceDetailPage({
   return (
     <main className="flex flex-col justify-center h-full max-w-5xl max-auto my-8">
       <div className="flex items-center  mb-5">
-        <h2 className="text-3xl font-semibold mr-4">
-          Invoice {params.invoiceId}
-        </h2>
+        <h2 className="text-3xl font-semibold mr-4">Invoice {invoiceId}</h2>
         <Badge
           className={cn(
             "rounded-full",
