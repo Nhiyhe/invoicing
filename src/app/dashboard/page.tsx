@@ -16,9 +16,9 @@ import { Invoices } from "@/db/schema";
 export default async function Home() {
   const invoices = await db.select().from(Invoices);
   return (
-    <main className="flex flex-col justify-center text-center h-full max-w-5xl max-auto my-8">
+    <main className="flex flex-col text-center justify-center h-full max-w-5xl max-auto my-8">
       <div className="flex justify-between mb-5">
-        <h2 className="text-3xl font-semibold">Invoicing</h2>
+        <h2 className="text-3xl font-semibold">Invoices</h2>
         <Button asChild>
           <Link href="invoices/new">Create</Link>
         </Button>
