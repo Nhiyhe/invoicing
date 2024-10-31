@@ -3,7 +3,8 @@ import Container from "@/components/ui/Container";
 import { db } from "@/db";
 import { Invoices } from "@/db/schema";
 import { cn } from "@/lib/utils";
-import { eq } from "drizzle-orm";
+import { auth } from "@clerk/nextjs/server";
+import { eq, and } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 export default async function InvoiceDetailPage({
@@ -17,10 +18,14 @@ export default async function InvoiceDetailPage({
     throw new Error("Invalid invoice Id");
   }
 
+  const { userId } = await auth();
+
+  if (!userId) return;
+
   const [invoice] = await db
     .select()
     .from(Invoices)
-    .where(eq(Invoices.id, invoiceId))
+    .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)))
     .limit(1);
 
   if (!invoice) return notFound();
