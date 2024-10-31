@@ -7,6 +7,23 @@ import { auth } from "@clerk/nextjs/server";
 import { eq, and } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+
+const STATUS = [
+  { id: "open", label: "Open" },
+  { id: "paid", label: "Paid" },
+  { id: "void", label: "Void" },
+  { id: "uncollectible", label: "UnCollectible" },
+];
+
 export default async function InvoiceDetailPage({
   params,
 }: {
@@ -32,30 +49,48 @@ export default async function InvoiceDetailPage({
 
   return (
     <main className=" my-8">
-      <Container>
-        <div className="flex items-center mb-5">
-          <h2 className="text-3xl font-semibold mr-4">Invoice {invoiceId}</h2>
-          <Badge
-            className={cn(
-              "rounded-full",
-              invoice.status === "open" && "bg-blue-500",
-              invoice.status === "paid" && "bg-green-500",
-              invoice.status === "void" && "bg-zinc-500",
-              invoice.status === "uncollectible" && "bg-red-500"
-            )}
-          >
-            {invoice.status}
-          </Badge>
+      <Container className="flex justify-between">
+        <div>
+          <div className="flex items-center mb-5">
+            <h2 className="text-3xl font-semibold mr-4">Invoice {invoiceId}</h2>
+            <Badge
+              className={cn(
+                "rounded-full",
+                invoice.status === "open" && "bg-blue-500",
+                invoice.status === "paid" && "bg-green-500",
+                invoice.status === "void" && "bg-zinc-500",
+                invoice.status === "uncollectible" && "bg-red-500"
+              )}
+            >
+              {invoice.status}
+            </Badge>
+          </div>
+          <p className="text-3xl mb-3">{(invoice.value * 100).toFixed(2)}</p>
+          <div className="text-2xl mb-2">Billing Information</div>
+          <p className="mb-2">{invoice.description}</p>
+          <p className="mb-2">Invoice Id {invoice.id}</p>
+          <p className="mb-2">
+            Invoice Date {new Date(invoice.createDate).toLocaleDateString()}
+          </p>
+          <p className="mb-2">Billing Name {}</p>
+          <p className="mb-2">Billing Email {}</p>
         </div>
-        <p className="text-3xl mb-3">{(invoice.value * 100).toFixed(2)}</p>
-        <div className="text-2xl mb-2">Billing Information</div>
-        <p className="mb-2">{invoice.description}</p>
-        <p className="mb-2">Invoice Id {invoice.id}</p>
-        <p className="mb-2">
-          Invoice Date {new Date(invoice.createDate).toLocaleDateString()}
-        </p>
-        <p className="mb-2">Billing Name {}</p>
-        <p className="mb-2">Billing Email {}</p>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>Change Status</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {STATUS.map((status) => {
+                return (
+                  <DropdownMenuItem key={status.id}>
+                    {status.label}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </Container>
     </main>
   );
