@@ -11,18 +11,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-const STATUS = [
-  { id: "open", label: "Open" },
-  { id: "paid", label: "Paid" },
-  { id: "void", label: "Void" },
-  { id: "uncollectible", label: "UnCollectible" },
-];
+import { STATUS } from "@/data/invoices";
+import { updateInvoiceStatus } from "@/action";
 
 export default async function InvoiceDetailPage({
   params,
@@ -55,7 +48,7 @@ export default async function InvoiceDetailPage({
             <h2 className="text-3xl font-semibold mr-4">Invoice {invoiceId}</h2>
             <Badge
               className={cn(
-                "rounded-full",
+                "rounded-full capitalize",
                 invoice.status === "open" && "bg-blue-500",
                 invoice.status === "paid" && "bg-green-500",
                 invoice.status === "void" && "bg-zinc-500",
@@ -84,7 +77,11 @@ export default async function InvoiceDetailPage({
               {STATUS.map((status) => {
                 return (
                   <DropdownMenuItem key={status.id}>
-                    {status.label}
+                    <form action={updateInvoiceStatus}>
+                      <input type="hidden" name="id" value={invoiceId} />
+                      <input type="hidden" name="status" value={status.id} />
+                      <button>{status.label}</button>
+                    </form>
                   </DropdownMenuItem>
                 );
               })}
