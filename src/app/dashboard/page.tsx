@@ -15,6 +15,7 @@ import { Invoices } from "@/db/schema";
 import Container from "@/components/ui/Container";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
+import { cn } from "@/lib/utils";
 
 export default async function Home() {
   const { userId } = await auth();
@@ -60,7 +61,17 @@ export default async function Home() {
                   <TableCell className="text-left">James Smith</TableCell>
                   <TableCell className="text-left">james@ymail.com</TableCell>
                   <TableCell className="text-left">
-                    <Badge className="rounded">{invoice.status}</Badge>
+                    <Badge
+                      className={cn(
+                        "rounded-full capitalize",
+                        invoice.status === "open" && "bg-blue-500",
+                        invoice.status === "paid" && "bg-green-500",
+                        invoice.status === "void" && "bg-zinc-500",
+                        invoice.status === "uncollectible" && "bg-red-500"
+                      )}
+                    >
+                      {invoice.status}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     ${invoice.value.toFixed(2)}
